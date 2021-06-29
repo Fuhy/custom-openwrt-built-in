@@ -1,0 +1,5 @@
+#!/bin/bash
+
+/sbin/ip rule del fwmark 1 table 100 
+/sbin/ip route del local 0.0.0.0/0 dev lo table 100 
+/usr/sbin/iptables -t mangle -F

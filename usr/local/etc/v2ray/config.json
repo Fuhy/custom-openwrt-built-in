@@ -1,0 +1,240 @@
+{
+	"log": {
+		"loglevel": "none",
+		"dnsLog": false,
+		"access": "/var/log/v2ray/v2ray-access.log",
+		"error": "/var/log/v2ray/v2ray-error.log"
+	},
+	"dns": {
+		"tag": "dns_server",
+		"clientIp": "101.86.203.111",
+		"servers": [
+			{
+				"address": "223.5.5.5",
+				"port": 53,
+				"domains": [
+					"geosite:cn",
+					"ntp.org",
+					"$youserverdomain.com"
+				]
+			},
+			{
+				"address": "114.114.114.114",
+				"port": 53,
+				"domains": [
+					"geosite:cn",
+					"ntp.org",
+					"$youserverdomain.com"
+				]
+			},
+			{
+				"address": "8.8.8.8",
+				"port": 53,
+				"domains": [
+				  "geosite:geolocation-!cn"
+				]
+			},
+			{
+				"address": "1.1.1.1", 
+				"port": 53,
+				"domains": [
+				  "geosite:geolocation-!cn"
+				]
+			}
+		]
+	},
+	"routing": {
+		"domainStrategy": "IPOnDemand",
+		"rules": [
+			{
+				"type": "field",
+				"inboundTag": [
+				  "transparent"
+				],
+				"port": 53,
+				"network": "udp",
+				"outboundTag": "dns_out" 
+			},  
+			{
+				"type": "field",
+				"inboundTag": [
+				  "transparent"
+				],
+				"port": 123,
+				"network": "udp",
+				"outboundTag": "direct" 
+			},   
+			{
+				"type": "field", 
+				"ip": [ 
+				  "223.5.5.5",
+				  "114.114.114.114"
+				],
+				"outboundTag": "direct"
+			},
+			{
+				"type": "field",
+				"ip": [ 
+				  "8.8.8.8",
+				  "1.1.1.1"
+				],
+				"outboundTag": "proxy"
+			  },
+			  { 
+				"type": "field",
+				"protocol":["bittorrent"], 
+				"outboundTag": "direct"
+			  },
+			  { 
+				"type": "field", 
+				"ip": [
+				  "geoip:private",
+				  "geoip:cn"
+				],
+				"outboundTag": "direct"
+			  },
+			  { 
+				"type": "field", 
+				"domain": [
+				  "geosite:cn",
+				  "geosite:apple-cn",
+				  "geosite:speedtest"
+				],
+				"outboundTag": "direct"
+			  },
+			  {
+				"type": "field",
+				"domain": [
+					"geosite:geolocation-!cn"
+				  ],
+				"outboundTag": "proxy"
+			  },
+			  {
+				"type": "field",
+				"network": "tcp,udp",
+				"outboundTag": "direct"
+			  }
+		]
+	},
+	"inbounds": [
+		{
+			"tag": "http_in",
+			"port": 1080,
+			"protocol": "http",
+			"settings": {
+				"allowTransparent": true
+			},
+			"streamSettings": {
+				"sockopt": {
+					"tcpFastOpen": true
+				}
+			},
+			"sniffing": {
+				"enabled": true,
+				"destOverride": [
+					"http",
+					"tls"
+				]
+			}
+		},
+		{
+			"tag": "socks_in",
+			"port": 1081,
+			"protocol": "socks",
+			"settings": {
+				"auth": "noauth",
+				"udp": false
+			},
+			"streamSettings": {
+				"security": "none",
+				"sockopt": {
+					"tcpFastOpen": true,
+					"tproxy": "tproxy"
+				}
+			},
+			"sniffing": {
+				"enabled": true,
+				"destOverride": [
+					"http",
+					"tls"
+				]
+			}
+		},
+		{
+			"tag": "transparent",
+			"port": 1082,
+			"protocol": "dokodemo-door",
+			"settings": {
+				"followRedirect": true,
+				"network": "tcp,udp"
+			},
+			"streamSettings": {
+				"sockopt": {
+					"tproxy": "tproxy",
+					"mark": 255
+				}
+			},
+			"sniffing": {
+				"enabled": true,
+				"destOverride": [
+					"http",
+					"tls"
+				]
+			}
+		}
+	],
+	"outbounds": [
+		{
+			"tag": "proxy",
+			"protocol": "vmess",
+			"settings": {
+				"vnext": [
+					...
+				]
+			},
+			"streamSettings": {
+				"network": "tcp",
+				"security": "tls",
+				"tlsSettings": {
+					"serverName": "$youserverdomain.com"
+				},
+				"tcpSettings": {
+					"header": {
+						"type": "none"
+					}
+				},
+				"sockopt": {
+					"mark": 255,
+					"tcpFastOpen": true
+				}
+			},
+			"mux": {
+				"enabled": true
+			}
+		},
+		{
+			"tag": "direct",
+			"protocol": "freedom",
+			"settings": {
+				"domainStrategy": "UseIP"
+			},
+			"streamSettings": {
+				"sockopt": {
+					"mark": 255
+				}
+			}
+		},
+		{
+			"tag": "dns_out",
+			"protocol": "dns",
+			"settings": {
+				
+			},
+			"streamSettings": {
+				"sockopt": {
+					"mark": 255
+				}
+			}
+		}
+	]
+}

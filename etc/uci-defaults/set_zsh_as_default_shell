@@ -1,0 +1,1 @@
+which zsh && sed -i -- 's:/bin/ash:'`which zsh`':g' /etc/passwd

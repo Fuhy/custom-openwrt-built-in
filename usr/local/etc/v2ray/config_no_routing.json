@@ -1,0 +1,67 @@
+{
+	"log": {
+		"loglevel": "none",
+		"dnsLog": false,
+		"access": "/var/log/v2ray/v2ray-access.log",
+		"error": "/var/log/v2ray/v2ray-error.log"
+	},
+	"inbounds": [
+		{
+			"tag": "http_in",
+			"port": 1080,
+			"protocol": "http",
+			"settings": {
+				"allowTransparent": true
+			},
+			"streamSettings": {
+				"sockopt": {
+					"tcpFastOpen": true
+				}
+			}
+		},
+		{
+			"tag": "socks_in",
+			"port": 1081,
+			"protocol": "socks",
+			"settings": {
+				"auth": "noauth",
+				"udp": false
+			},
+			"streamSettings": {
+				"security": "none",
+				"sockopt": {
+					"tcpFastOpen": true,
+					"tproxy": "tproxy"
+				}
+			}
+		}
+	],
+	"outbounds": [
+		{
+			"tag": "proxy",
+			"protocol": "vmess",
+			"settings": {
+				"vnext": [
+				]
+			},
+			"streamSettings": {
+				"network": "tcp",
+				"security": "tls",
+				"tlsSettings": {
+				},
+				"tcpSettings": {
+					"header": {
+						"type": "none"
+					}
+				},
+				"sockopt": {
+					"mark": 255,
+					"tcpFastOpen": true
+				}
+			},
+			"mux": {
+				"enabled": true
+			}
+		}
+	]
+}

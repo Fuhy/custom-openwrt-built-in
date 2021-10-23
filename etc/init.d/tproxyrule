@@ -1,7 +1,5 @@
 #!/bin/sh /etc/rc.common
-#
-# author: alfred.fu98@gmail.com
-#
+# Copyright (C) 2013 OpenWrt.org
 
 USE_PROCD=1
 

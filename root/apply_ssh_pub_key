@@ -1,0 +1,2 @@
+mkdir -p /etc/dropbear/
+echo "<ssh_publickey>" >> /etc/dropbear/authorized_keys

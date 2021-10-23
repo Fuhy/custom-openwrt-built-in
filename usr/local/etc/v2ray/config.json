@@ -7,15 +7,13 @@
 	},
 	"dns": {
 		"tag": "dns_server",
-		"clientIp": "101.86.203.111",
 		"servers": [
 			{
 				"address": "223.5.5.5",
 				"port": 53,
 				"domains": [
 					"geosite:cn",
-					"ntp.org",
-					"$youserverdomain.com"
+					"ntp.org"
 				]
 			},
 			{
@@ -23,23 +21,19 @@
 				"port": 53,
 				"domains": [
 					"geosite:cn",
-					"ntp.org",
-					"$youserverdomain.com"
+					"ntp.org"
 				]
 			},
 			{
 				"address": "8.8.8.8",
 				"port": 53,
 				"domains": [
-				  "geosite:geolocation-!cn"
+					"geosite:geolocation-!cn"
 				]
 			},
 			{
-				"address": "1.1.1.1", 
-				"port": 53,
-				"domains": [
-				  "geosite:geolocation-!cn"
-				]
+				"address": "1.1.1.1",
+				"port": 53
 			}
 		]
 	},
@@ -48,72 +42,75 @@
 		"rules": [
 			{
 				"type": "field",
-				"inboundTag": [
-				  "transparent"
-				],
-				"port": 53,
-				"network": "udp",
-				"outboundTag": "dns_out" 
-			},  
-			{
-				"type": "field",
-				"inboundTag": [
-				  "transparent"
-				],
-				"port": 123,
-				"network": "udp",
-				"outboundTag": "direct" 
-			},   
-			{
-				"type": "field", 
-				"ip": [ 
-				  "223.5.5.5",
-				  "114.114.114.114"
+				"protocol": [
+					"bittorrent"
 				],
 				"outboundTag": "direct"
 			},
 			{
 				"type": "field",
-				"ip": [ 
-				  "8.8.8.8",
-				  "1.1.1.1"
+				"inboundTag": [
+					"transparent"
+				],
+				"port": 53,
+				"network": "udp",
+				"outboundTag": "dns_out"
+			},
+			{
+				"type": "field",
+				"inboundTag": [
+					"transparent"
+				],
+				"port": 123,
+				"network": "udp",
+				"outboundTag": "direct"
+			},
+			{
+				"type": "field",
+				"ip": [
+					"223.5.5.5",
+					"114.114.114.114"
+				],
+				"outboundTag": "direct"
+			},
+			{
+				"type": "field",
+				"ip": [
+					"8.8.8.8",
+					"1.1.1.1"
 				],
 				"outboundTag": "proxy"
-			  },
-			  { 
+			},
+			{
 				"type": "field",
-				"protocol":["bittorrent"], 
-				"outboundTag": "direct"
-			  },
-			  { 
-				"type": "field", 
 				"ip": [
-				  "geoip:private",
-				  "geoip:cn"
+					"geoip:private",
+					"geoip:cn"
 				],
 				"outboundTag": "direct"
-			  },
-			  { 
-				"type": "field", 
+			},
+			{
+				"type": "field",
 				"domain": [
-				  "geosite:cn",
-				  "geosite:apple-cn",
-				  "geosite:speedtest"
+					"geosite:category-games@cn",
+					"geosite:cn",
+					"geosite:apple-cn",
+					"geosite:speedtest"
 				],
 				"outboundTag": "direct"
-			  },
-			  {
+			},
+			{
 				"type": "field",
 				"domain": [
 					"geosite:geolocation-!cn"
-				  ],
+				],
 				"outboundTag": "proxy"
-			  },
-			  {
+			},
+			{
 				"type": "field",
 				"network": "tcp,udp",
-				"outboundTag": "direct"
-			  }
+				"outboundTag": "proxy"
+			}
 		]
 	},
 	"inbounds": [
@@ -170,8 +167,7 @@
 			},
 			"streamSettings": {
 				"sockopt": {
-					"tproxy": "tproxy",
-					"mark": 255
+					"tproxy": "tproxy"
 				}
 			},
 			"sniffing": {
@@ -189,14 +185,12 @@
 			"protocol": "vmess",
 			"settings": {
 				"vnext": [
-					...
 				]
 			},
 			"streamSettings": {
 				"network": "tcp",
 				"security": "tls",
 				"tlsSettings": {
-					"serverName": "$youserverdomain.com"
 				},
 				"tcpSettings": {
 					"header": {
@@ -227,9 +221,6 @@
 		{
 			"tag": "dns_out",
 			"protocol": "dns",
-			"settings": {
-				
-			},
 			"streamSettings": {
 				"sockopt": {
 					"mark": 255

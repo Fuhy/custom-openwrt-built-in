@@ -1,0 +1,5 @@
+mkdir -p /mnt/udisk
+mount /dev/mmcblk0p3 /mnt/udisk
+mkdir -p /tmp/root
+mount --bind / /tmp/root
+tar -C /tmp/root -cvf /mnt/udisk/backup.tar .

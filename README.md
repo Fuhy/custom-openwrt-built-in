@@ -10,22 +10,27 @@ It's only some shell scripts and config files here. If you want to use the files
 │   │   ├── tproxyrule    # init.d script to automatic enable transparent proxy
 │   │   └── v2ray         # init.d script to automatic start v2ray when reboot
 │   └── uci-defaults
-│       ├── enable_dhcp_on_first_boot   # enable dhcp/wifi so you can connect the device when the first boot
-│       ├── enable_ip_forward        # require if you want it to be the gateway
-│       └── set_zsh_as_default_shell  # remenber to include zsh into the image
-├── root  # /root is ~/ directory, set up some useful script here.
+│       ├── create_some_folders              # as title.
+│       ├── enable_dhcp_on_first_boot        # enable dhcp/wifi so you can connect the device when the first boot
+│       └── set_zsh_as_default_shell         # remenber to include zsh into the image
+├── root    # /root is ~/ directory, set up some useful script here.
+│   ├── apply_ssh_pub_key
 │   ├── export_v2ray_env_var.sh
 │   └── install_oh_my_zsh.sh
 └── usr
     └── local
         ├── bin
-        │   ├── flush_iptable_tproxy     # called by init.d/tproxyrule
-        │   └── restore_iptable_tproxy   # called by init.d/tproxyrule
+        │   ├── copyRootToNewPartition      # if you want to resize the image
+        │   ├── enableTproxy
+        │   ├── flush_iptable_tproxy        # called by init.d/tproxyrule
+        │   ├── measureTemp
+        │   └── restore_iptable_tproxy      # called by init.d/tproxyrule
         ├── etc
-        │   └── v2ray # require V2RAY_LOCATION_CONFIG=/usr/local/share/v2ray
-        │       └── config.json
+        │   └── v2ray                       # require V2RAY_LOCATION_CONFIG=/usr/local/share/v2ray
+        │       ├── config.json
+        │       └── config_no_routing.json
         └── share
-            └── v2ray # require V2RAY_LOCATION_ASSET=/usr/local/share/v2ray
+            └── v2ray                       # require V2RAY_LOCATION_ASSET=/usr/local/share/v2ray
                 ├── geoip.dat
                 └── geosite.dat
 ```
